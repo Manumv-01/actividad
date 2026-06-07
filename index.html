@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liceo Francés Paul Valéry · Cali</title>
+    <style>
+        /* ===== VARIABLES ===== */
+        :root {
+            --azul:        #0d2b6e;
+            --azul-claro:  #1565C0;
+            --rojo:        #c62828;
+            --blanco:      #ffffff;
+            --gris-claro:  #f4f6fb;
+            --gris:        #e8ecf4;
+            --texto:       #1a1a2e;
+            --texto-suave: #555;
+            --sombra:      0 4px 24px rgba(13,43,110,.12);
+            --radio:       12px;
+            --t:           0.3s ease;
+        }
+
+        /* ===== RESET ===== */
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: var(--texto);
+            background: var(--blanco);
+            overflow-x: hidden;
+        }
+        img  { display:block; max-width:100%; }
+        a    { text-decoration:none; color:inherit; }
+
+        /* ===== NAVBAR ===== */
+        nav {
+            position: fixed;
+            inset: 0 0 auto 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.2rem 5%;
+            transition: background var(--t), box-shadow var(--t);
+        }
+        nav.scrolled {
+            background: var(--azul);
+            box-shadow: 0 2px 20px rgba(0,0,0,.2);
+        }
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            color: var(--blanco);
+        }
+        .nav-logo-icon {
+            width: 42px; height: 42px;
+            background: var(--rojo);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--blanco);
+            flex-shrink: 0;
+        }
+        .nav-logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.15;
+        }
+        .nav-logo-text strong { font-size: 1rem; font-weight: 700; }
+        .nav-logo-text span   { font-size: .75rem; opacity: .85; }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav-links a {
+            color: var(--blanco);
+            font-size: .9rem;
+            font-weight: 500;
+            opacity: .9;
+            transition: opacity var(--t);
+            position: relative;
+            padding-bottom: 4px;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 0; height: 2px;
+            background: var(--rojo);
+            transition: width var(--t);
+        }
+        .nav-links a:hover          { opacity: 1; }
+        .nav-links a:hover::after   { width: 100%; }
+
+        /* ===== HERO ===== */
+        #inicio {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: url('imagenes/WhatsApp Image 2026-05-24 at 12.20.00 PM (2).jpeg') center/cover no-repeat;
+            transform: scale(1.05);
+        }
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(13,43,110,.65) 0%,
+                rgba(13,43,110,.45) 50%,
+                rgba(13,43,110,.8)  100%
+            );
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            color: var(--blanco);
+            max-width: 760px;
+            padding: 2rem;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: var(--rojo);
+            color: var(--blanco);
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .15em;
+            text-transform: uppercase;
+            padding: .4rem 1rem;
+            border-radius: 50px;
+            margin-bottom: 1.5rem;
+        }
+        .hero-content h1 {
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,.3);
+        }
+        .hero-content p {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            opacity: .9;
+            margin-bottom: 2.5rem;
+            line-height: 1.65;
+        }
+        .hero-btns {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: .9rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: .95rem;
+            cursor: pointer;
+            border: none;
+            transition: transform var(--t), box-shadow var(--t);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,.25);
+        }
+        .btn-primary { background: var(--rojo);   color: var(--blanco); }
+        .btn-outline  { background: transparent;  color: var(--blanco); border: 2px solid rgba(255,255,255,.8); }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 2rem; left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+            color: var(--blanco);
+            opacity: .65;
+            animation: bounce 2s infinite;
+        }
+        .scroll-hint svg { width: 28px; height: 28px; }
+        @keyframes bounce {
+            0%,100% { transform: translateX(-50%) translateY(0); }
+            50%      { transform: translateX(-50%) translateY(8px); }
+        }
+
+        /* ===== SECCIONES COMUNES ===== */
+        section { padding: 5rem 5%; }
+
+        .section-label {
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: var(--rojo);
+            margin-bottom: .75rem;
+        }
+        .section-title {
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            font-weight: 800;
+            color: var(--azul);
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+        .section-subtitle {
+            color: var(--texto-suave);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            max-width: 600px;
+        }
+
+        /* ===== NOSOTROS ===== */
+        #nosotros { background: var(--gris-claro); }
+
+        .acerca-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .acerca-img-wrapper { position: relative; }
+        .acerca-img-wrapper img {
+            width: 100%; height: 450px;
+            object-fit: cover;
+            border-radius: var(--radio);
+            box-shadow: var(--sombra);
+        }
+        .acerca-badge {
+            position: absolute;
+            bottom: -1.5rem; right: -1.5rem;
+            background: var(--azul);
+            color: var(--blanco);
+            padding: 1.5rem;
+            border-radius: var(--radio);
+            text-align: center;
+            box-shadow: var(--sombra);
+        }
+        .acerca-badge .num {
+            font-size: 2.5rem;
+            font-weight: 800;
+            display: block;
+            line-height: 1;
+        }
+        .acerca-badge small { font-size: .72rem; opacity: .85; }
+
+        .acerca-texto { padding-left: 1rem; }
+        .acerca-texto ul {
+            list-style: none;
+            margin-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: .75rem;
+        }
+        .acerca-texto ul li {
+            display: flex;
+            align-items: flex-start;
+            gap: .75rem;
+            color: var(--texto-suave);
+            font-size: .95rem;
+            line-height: 1.55;
+        }
+        .acerca-texto ul li::before {
+            content: '✓';
+            color: var(--rojo);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* ===== INSTALACIONES ===== */
+        #instalaciones { background: var(--blanco); }
+
+        .instalaciones-header {
+            max-width: 1100px;
+            margin: 0 auto 3rem;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radio);
+            cursor: zoom-in;
+            background: #ddd;
+        }
+        .gallery-item:first-child { grid-column: span 2; }
+
+        .gallery-item img {
+            width: 100%; height: 280px;
+            object-fit: cover;
+            transition: transform .5s ease;
+        }
+        .gallery-item:first-child img { height: 380px; }
+        .gallery-item:hover img { transform: scale(1.05); }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: linear-gradient(transparent, rgba(13,43,110,.85));
+            color: var(--blanco);
+            padding: 1.5rem 1rem 1rem;
+            font-size: .85rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity var(--t);
+        }
+        .gallery-item:hover .gallery-caption { opacity: 1; }
+
+        /* ===== LIGHTBOX ===== */
+        .lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.92);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        .lightbox.active { display: flex; }
+        .lightbox img {
+            max-width: 90vw;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        .lb-close {
+            position: absolute;
+            top: 1.5rem; right: 1.5rem;
+            background: rgba(255,255,255,.15);
+            border: none;
+            color: #fff;
+            font-size: 1.4rem;
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background var(--t);
+        }
+        .lb-close:hover { background: var(--rojo); }
+
+        /* ===== POR QUÉ ELEGIRNOS ===== */
+        #por-que {
+            background: var(--azul);
+            color: var(--blanco);
+        }
+        #por-que .section-title    { color: var(--blanco); }
+        #por-que .section-subtitle { color: rgba(255,255,255,.75); }
+        #por-que .section-label    { color: rgba(255,255,255,.6); }
+
+        .porque-header { max-width: 1100px; margin: 0 auto 3rem; }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .card {
+            background: rgba(255,255,255,.07);
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: var(--radio);
+            padding: 2rem 1.75rem;
+            transition: background var(--t), transform var(--t);
+        }
+        .card:hover {
+            background: rgba(255,255,255,.13);
+            transform: translateY(-4px);
+        }
+        .card-icon   { font-size: 2.4rem; margin-bottom: 1rem; }
+        .card h3     { font-size: 1.05rem; font-weight: 700; margin-bottom: .7rem; }
+        .card p      { color: rgba(255,255,255,.75); font-size: .9rem; line-height: 1.65; }
+
+        /* ===== CÓMO SE HIZO ===== */
+        #como-se-hizo { background: var(--gris-claro); }
+
+        .tech-header { max-width: 900px; margin: 0 auto 3rem; }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .tech-card {
+            background: var(--blanco);
+            border-radius: var(--radio);
+            padding: 2rem;
+            box-shadow: var(--sombra);
+            border-top: 4px solid var(--azul);
+        }
+        .tech-card:nth-child(2) { border-top-color: var(--rojo); }
+        .tech-card:nth-child(3) { border-top-color: #f59e0b; }
+
+        .tech-tag {
+            display: inline-block;
+            background: var(--gris);
+            color: var(--azul);
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            padding: .3rem .75rem;
+            border-radius: 50px;
+            margin-bottom: 1rem;
+        }
+        .tech-card h3  { font-size: 1.1rem; color: var(--azul); margin-bottom: .75rem; }
+        .tech-card ul  { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+        .tech-card ul li {
+            font-size: .87rem;
+            color: var(--texto-suave);
+            display: flex;
+            align-items: flex-start;
+            gap: .5rem;
+            line-height: 1.55;
+        }
+        .tech-card ul li::before {
+            content: '→';
+            color: var(--azul);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .tech-card:nth-child(2) ul li::before { color: var(--rojo); }
+        .tech-card:nth-child(3) ul li::before { color: #f59e0b; }
+
+        .code-block {
+            margin-top: 1.25rem;
+            background: #1a1a2e;
+            border-radius: 8px;
+            padding: 1rem 1.1rem;
+            font-family: 'Courier New', monospace;
+            font-size: .77rem;
+            color: #a5d6a7;
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+        .code-block .kw  { color: #64b5f6; }
+        .code-block .st  { color: #ffcc02; }
+        .code-block .cm  { color: #546e7a; }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: #0a1e4d;
+            color: rgba(255,255,255,.65);
+            text-align: center;
+            padding: 2.5rem 5%;
+        }
+        footer strong      { color: var(--blanco); }
+        footer .footer-sub { margin-top: .5rem; font-size: .82rem; }
+        footer .footer-autor {
+            margin-top: 1.2rem;
+            font-size: .85rem;
+            color: rgba(255,255,255,.5);
+            border-top: 1px solid rgba(255,255,255,.1);
+            padding-top: 1rem;
+        }
+        footer .footer-autor strong { color: rgba(255,255,255,.85); }
+
+        /* ===== ANIMACIONES SCROLL ===== */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity .65s ease, transform .65s ease;
+        }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+        /* Stagger para hijos de grids */
+        .cards-grid  .fade-up:nth-child(2),
+        .tech-grid   .fade-up:nth-child(2),
+        .gallery-grid .fade-up:nth-child(2) { transition-delay: .1s; }
+
+        .cards-grid  .fade-up:nth-child(3),
+        .tech-grid   .fade-up:nth-child(3),
+        .gallery-grid .fade-up:nth-child(3) { transition-delay: .2s; }
+
+        .cards-grid .fade-up:nth-child(4) { transition-delay: .1s; }
+        .cards-grid .fade-up:nth-child(5) { transition-delay: .2s; }
+        .cards-grid .fade-up:nth-child(6) { transition-delay: .3s; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .acerca-grid  { grid-template-columns: 1fr; gap: 3rem; }
+            .acerca-badge { right: 1rem; bottom: -1rem; }
+            .acerca-texto { padding-left: 0; }
+            .cards-grid   { grid-template-columns: 1fr 1fr; }
+            .tech-grid    { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 640px) {
+            .nav-links    { display: none; }
+            .gallery-grid { grid-template-columns: 1fr 1fr; }
+            .gallery-item:first-child { grid-column: span 2; }
+            .cards-grid   { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 420px) {
+            .gallery-grid { grid-template-columns: 1fr; }
+            .gallery-item:first-child { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ══ NAVBAR ══════════════════════════════════════════════════════════════ -->
+<nav id="navbar">
+    <div class="nav-logo">
+        <div class="nav-logo-icon">LF</div>
+        <div class="nav-logo-text">
+            <strong>Liceo Francés</strong>
+            <span>Paul Valéry · Cali</span>
+        </div>
+    </div>
+    <ul class="nav-links">
+        <li><a href="#nosotros">Nosotros</a></li>
+        <li><a href="#instalaciones">Instalaciones</a></li>
+        <li><a href="#por-que">¿Por qué elegirnos?</a></li>
+        <li><a href="#como-se-hizo">Cómo se hizo</a></li>
+    </ul>
+</nav>
+
+<!-- ══ HERO ═════════════════════════════════════════════════════════════════ -->
+<section id="inicio">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <span class="hero-badge">Cali, Colombia</span>
+        <h1>Formando líderes<br>del futuro</h1>
+        <p>Bilingüismo, excelencia académica y valores humanos en un campus excepcional a las puertas de los Farallones.</p>
+        <div class="hero-btns">
+            <a href="#instalaciones" class="btn btn-primary">Ver instalaciones</a>
+            <a href="#nosotros"      class="btn btn-outline">Conocer más</a>
+        </div>
+    </div>
+    <div class="scroll-hint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+        </svg>
+    </div>
+</section>
+
+<!-- ══ NOSOTROS ══════════════════════════════════════════════════════════════ -->
+<section id="nosotros">
+    <div class="acerca-grid">
+        <div class="acerca-img-wrapper fade-up">
+            <img src="imagenes/WhatsApp Image 2026-05-24 at 12.05.40 PM.jpeg" alt="Corredores del campus con columnas azules">
+            <div class="acerca-badge">
+                <span class="num">+50</span>
+                <small>años de historia</small>
+            </div>
+        </div>
+        <div class="acerca-texto fade-up">
+            <p class="section-label">Quiénes somos</p>
+            <h2 class="section-title">Un referente educativo<br>franco-colombiano</h2>
+            <p class="section-subtitle">El Liceo Francés Paul Valéry es una institución bilingüe con homologación oficial de la República Francesa, miembro de la red AEFE.</p>
+            <ul>
+                <li>Educación desde preescolar hasta bachillerato</li>
+                <li>Certificaciones en francés, inglés y portugués</li>
+                <li>Red AEFE — Agence pour l'Enseignement Français à l'Étranger</li>
+                <li>Campus de 12 hectáreas con instalaciones de primer nivel</li>
+                <li>Comunidad activa de familias y ex-alumnos en todo el mundo</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ══ INSTALACIONES ═════════════════════════════════════════════════════════ -->
+<section id="instalaciones">
+    <div class="instalaciones-header">
+        <p class="section-label">Nuestro campus</p>
+        <h2 class="section-title">Instalaciones de primer nivel</h2>
+        <p class="section-subtitle">Un ambiente diseñado para el aprendizaje, el deporte y el bienestar de toda la comunidad educativa.</p>
+    </div>
+    <div class="gallery-grid">
+        <div class="gallery-item fade-up" onclick="openLightbox('imagenes/WhatsApp Image 2026-05-24 at 12.20.00 PM (2).jpeg')">
+            <img src="imagenes/WhatsApp Image 2026-05-24 at 12.20.00 PM (2).jpeg" alt="Piscina olímpica con vista a los Farallones">
+            <div class="gallery-caption">Piscina olímpica con vista a los Farallones</div>
+        </div>
+        <div class="gallery-item fade-up" onclick="openLightbox('imagenes/WhatsApp Image 2026-05-24 at 12.20.00 PM.jpeg')">
+            <img src="imagenes/WhatsApp Image 2026-05-24 at 12.20.00 PM.jpeg" alt="Zona deportiva exterior">
+            <div class="gallery-caption">Zona deportiva exterior</div>
+        </div>
+        <div class="gallery-item fade-up" onclick="openLightbox('imagenes/WhatsApp Image 2026-05-24 at 12.05.37 PM.jpeg')">
+            <img src="imagenes/WhatsApp Image 2026-05-24 at 12.05.37 PM.jpeg" alt="Zonas verdes del campus">
+            <div class="gallery-caption">Amplias zonas verdes</div>
+        </div>
+        <div class="gallery-item fade-up" onclick="openLightbox('imagenes/WhatsApp Image 2026-05-24 at 12.05.43 PM.jpeg')">
+            <img src="imagenes/WhatsApp Image 2026-05-24 at 12.05.43 PM.jpeg" alt="Corredores cubiertos">
+            <div class="gallery-caption">Corredores cubiertos</div>
+        </div>
+        <div class="gallery-item fade-up" onclick="openLightbox('imagenes/WhatsApp Image 2026-05-24 at 12.05.38 PM.jpeg')">
+            <img src="imagenes/WhatsApp Image 2026-05-24 at 12.05.38 PM.jpeg" alt="Pasillo interior">
+            <div class="gallery-caption">Instalaciones interiores</div>
+        </div>
+        <div class="gallery-item fade-up" onclick="openLightbox('imagenes/WhatsApp Image 2026-05-24 at 12.05.46 PM.jpeg')">
+            <img src="imagenes/WhatsApp Image 2026-05-24 at 12.05.46 PM.jpeg" alt="Área de bienestar">
+            <div class="gallery-caption">Área de bienestar y salud</div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ LIGHTBOX ══════════════════════════════════════════════════════════════ -->
+<div class="lightbox" id="lightbox" onclick="closeLightboxClick(event)">
+    <button class="lb-close" onclick="closeLightbox()">✕</button>
+    <img id="lbImg" src="" alt="Vista ampliada">
+</div>
+
+<!-- ══ POR QUÉ ELEGIRNOS ══════════════════════════════════════════════════════ -->
+<section id="por-que">
+    <div class="porque-header">
+        <p class="section-label">Nuestra propuesta</p>
+        <h2 class="section-title">¿Por qué elegirnos?</h2>
+        <p class="section-subtitle">Más de cinco décadas formando ciudadanos del mundo desde Cali.</p>
+    </div>
+    <div class="cards-grid">
+        <div class="card fade-up">
+            <div class="card-icon">🌍</div>
+            <h3>Multilingüismo</h3>
+            <p>Formación en francés, inglés, portugués y español desde los primeros años, abriendo puertas en todo el mundo.</p>
+        </div>
+        <div class="card fade-up">
+            <div class="card-icon">🏅</div>
+            <h3>Red AEFE</h3>
+            <p>Somos parte de la red oficial francesa de enseñanza en el exterior, con homologación y estándares internacionales.</p>
+        </div>
+        <div class="card fade-up">
+            <div class="card-icon">🏊</div>
+            <h3>Campus excepcional</h3>
+            <p>12 hectáreas con piscina olímpica, zonas deportivas, laboratorios y amplios espacios al pie de los Farallones.</p>
+        </div>
+        <div class="card fade-up">
+            <div class="card-icon">👨‍🏫</div>
+            <h3>Docentes de excelencia</h3>
+            <p>Planta docente certificada y bilingüe, con formación continua y metodologías pedagógicas actualizadas.</p>
+        </div>
+        <div class="card fade-up">
+            <div class="card-icon">🎓</div>
+            <h3>Proyección internacional</h3>
+            <p>Nuestros egresados acceden a universidades de Francia, Colombia, EE.UU. y Europa con reconocimiento inmediato.</p>
+        </div>
+        <div class="card fade-up">
+            <div class="card-icon">❤️</div>
+            <h3>Comunidad</h3>
+            <p>Una comunidad educativa unida, con familias comprometidas y una red de ex-alumnos activa en todo el mundo.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ══ CÓMO SE HIZO ════════════════════════════════════════════════════════ -->
+<section id="como-se-hizo">
+    <div class="tech-header">
+        <p class="section-label">Detrás de escena</p>
+        <h2 class="section-title">¿Cómo se construyó esta página?</h2>
+        <p class="section-subtitle">Una <em>single-page</em> hecha con las tecnologías base de la web — HTML, CSS y JavaScript puro — sin frameworks ni librerías externas.</p>
+    </div>
+    <div class="tech-grid">
+
+        <div class="tech-card fade-up">
+            <span class="tech-tag">HTML</span>
+            <h3>Estructura semántica</h3>
+            <ul>
+                <li>Etiquetas semánticas: &lt;nav&gt;, &lt;section&gt;, &lt;footer&gt;</li>
+                <li>Un solo archivo — toda la página en un HTML</li>
+                <li>Anclas con <code>id</code> para navegar entre secciones</li>
+                <li>Atributo <code>alt</code> en imágenes para accesibilidad</li>
+            </ul>
+            <div class="code-block">
+<span class="cm">&lt;!-- cada sección tiene su id --&gt;</span>
+<span class="kw">&lt;section</span> <span class="st">id="nosotros"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;h2&gt;</span>Quiénes somos<span class="kw">&lt;/h2&gt;</span>
+<span class="kw">&lt;/section&gt;</span>
+            </div>
+        </div>
+
+        <div class="tech-card fade-up">
+            <span class="tech-tag">CSS</span>
+            <h3>Estilos modernos</h3>
+            <ul>
+                <li>Variables CSS (<code>:root</code>) para colores reutilizables</li>
+                <li>CSS Grid para la galería y las tarjetas</li>
+                <li>Flexbox para la navbar y las listas</li>
+                <li>Animaciones con <code>transition</code> y <code>@keyframes</code></li>
+                <li>Diseño responsivo con <code>@media</code> queries</li>
+            </ul>
+            <div class="code-block">
+<span class="kw">:root</span> {
+  <span class="st">--azul</span>: #0d2b6e;
+  <span class="st">--rojo</span>: #c62828;
+}
+<span class="kw">.gallery-grid</span> {
+  <span class="st">display</span>: grid;
+  <span class="st">grid-template-columns</span>: repeat(3, 1fr);
+}
+            </div>
+        </div>
+
+        <div class="tech-card fade-up">
+            <span class="tech-tag">JavaScript</span>
+            <h3>Interactividad</h3>
+            <ul>
+                <li>Navbar que cambia color al hacer scroll</li>
+                <li><code>IntersectionObserver</code> para animar elementos al aparecer</li>
+                <li>Efecto parallax sutil en el hero</li>
+                <li>Lightbox para ver imágenes ampliadas</li>
+                <li>Cierre con tecla <code>Escape</code></li>
+            </ul>
+            <div class="code-block">
+<span class="cm">// Animar al entrar en pantalla</span>
+<span class="kw">new</span> IntersectionObserver(entries => {
+  entries.forEach(e => {
+    <span class="kw">if</span> (e.isIntersecting)
+      e.target.classList.add(<span class="st">'visible'</span>);
+  });
+}).observe(elemento);
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ══ FOOTER ════════════════════════════════════════════════════════════════ -->
+<footer>
+    <p><strong>Liceo Francés Paul Valéry</strong> · Cali, Colombia</p>
+    <p class="footer-sub">Página de demostración · HTML + CSS + JavaScript puro</p>
+    <p class="footer-autor">Trabajo de <strong>Manuela Montenegro Villada</strong> &amp; <strong>Samuel Peñaloza</strong></p>
+</footer>
+
+<!-- ══ SCRIPTS ═══════════════════════════════════════════════════════════════ -->
+<script>
+    // ── Navbar: cambiar fondo al hacer scroll ─────────────────────────────
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        navbar.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // ── Parallax sutil en el hero ──────────────────────────────────────────
+    const heroBg = document.getElementById('heroBg');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY < window.innerHeight) {
+            heroBg.style.transform = `scale(1.05) translateY(${window.scrollY * 0.22}px)`;
+        }
+    });
+
+    // ── IntersectionObserver: fade-up al aparecer en pantalla ─────────────
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // ── Lightbox ───────────────────────────────────────────────────────────
+    function openLightbox(src) {
+        document.getElementById('lbImg').src = src;
+        document.getElementById('lightbox').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function closeLightboxClick(e) {
+        if (e.target === document.getElementById('lightbox')) closeLightbox();
+    }
+
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeLightbox();
+    });
+</script>
+
+</body>
+</html>
